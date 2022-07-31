@@ -18,8 +18,9 @@ class App extends StatelessWidget {
         colorSchemeSeed: Colors.blueGrey,
         useMaterial3: true,
         inputDecorationTheme: const InputDecorationTheme(
-          // border: InputBorder.none,
+          border: InputBorder.none,
           floatingLabelBehavior: FloatingLabelBehavior.always,
+          floatingLabelStyle: TextStyle(height: 0.5),
         ),
         cardTheme: const CardTheme(
           margin: EdgeInsets.symmetric(

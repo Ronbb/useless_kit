@@ -1,7 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:useless_kit/pages/converter/base64.dart';
+import 'package:useless_kit/pages/converter/crypto.dart';
+import 'package:useless_kit/pages/converter/unicode.dart';
 import 'package:useless_kit/pages/home/delegate.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +16,8 @@ class _HomePageState extends State<HomePage> {
 
   static const List<HomeContentDelegate> delegates = [
     Base64ConverterPage.delegate,
-    Base64ConverterPage.delegate,
+    UnicodeConverterPage.delegate,
+    CryptoPage.delegate,
   ];
 
   @override
