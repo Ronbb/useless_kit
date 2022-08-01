@@ -8,8 +8,11 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:useless_kit/app.dart';
+import 'package:useless_kit/inject.dart';
 
-void main() {
+void main() async {
+  await inject();
+
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(const App());
   });
