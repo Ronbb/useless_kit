@@ -28,8 +28,9 @@ class _HomePageState extends State<HomePage> {
       body: Row(
         children: <Widget>[
           NavigationRail(
+            extended: true,
+            minExtendedWidth: 192,
             selectedIndex: _selectedIndex,
-            labelType: NavigationRailLabelType.selected,
             groupAlignment: Alignment.center.y,
             onDestinationSelected: (int index) {
               setState(() {
