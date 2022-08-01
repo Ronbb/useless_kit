@@ -51,8 +51,8 @@ class _CryptoPageState extends State<CryptoPage> {
       hintText: 'AES with PKCS7 padding.',
       extraDecodedItems: algorithm.extraDecodedItems,
       extraEncodedItems: algorithm.extraEncodedItems,
-      decodedLabel: const Text('PlainText'),
-      encodedLabel: const Text('CipherText'),
+      decodedLabel: const Text('Plain Text'),
+      encodedLabel: const Text('Cipher Text'),
       decode: _decode,
       encode: _encode,
       prefixActions: [
