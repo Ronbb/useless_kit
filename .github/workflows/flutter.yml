@@ -27,7 +27,7 @@ jobs:
         run: flutter analyze
 
       - name: Build web
-        run: flutter build web
+        run: flutter build web --base-href "/useless_kit/"
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3.7.3
