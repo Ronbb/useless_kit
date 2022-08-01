@@ -12,6 +12,7 @@ class Base64ConverterPage extends ConverterPage {
           decode: _decode,
           decodedLabel: const Text('Decoded'),
           encodedLabel: const Text('Encoded'),
+          restorationId: 'base64',
         );
 
   static const HomeContentDelegate delegate = HomeContentChildDelegate(
@@ -23,7 +24,7 @@ class Base64ConverterPage extends ConverterPage {
     child: Base64ConverterPage(),
   );
 
-  static DataGroup _encode(DataGroup data) {
+  static ConverterData _encode(ConverterData data) {
     return data.copyWith(
       encoded: base64.encode(
         utf8.encode(data.decoded),
@@ -31,7 +32,7 @@ class Base64ConverterPage extends ConverterPage {
     );
   }
 
-  static DataGroup _decode(DataGroup data) {
+  static ConverterData _decode(ConverterData data) {
     return data.copyWith(
       decoded: utf8.decode(
         base64.decode(data.encoded),

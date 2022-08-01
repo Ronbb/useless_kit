@@ -1,31 +1,39 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
-typedef ExtraData = Map<Object?, String>;
+part 'converter.g.dart';
 
-typedef Converter = FutureOr<DataGroup> Function(DataGroup data);
+typedef ConverterExtraData = Map<String, String>;
 
-class DataGroup {
-  const DataGroup({
+typedef Converter = FutureOr<ConverterData> Function(ConverterData data);
+
+@HiveType(typeId: 0)
+class ConverterData {
+  const ConverterData({
     required this.decoded,
     required this.encoded,
     required this.extraDecodedData,
     required this.extraEncodedData,
   });
 
+  @HiveField(1)
   final String decoded;
+  @HiveField(2)
   final String encoded;
-  final ExtraData extraDecodedData;
-  final ExtraData extraEncodedData;
+  @HiveField(3)
+  final ConverterExtraData extraDecodedData;
+  @HiveField(4)
+  final ConverterExtraData extraEncodedData;
 
-  DataGroup copyWith({
+  ConverterData copyWith({
     String? decoded,
     String? encoded,
-    ExtraData? extraDecodedData,
-    ExtraData? extraEncodedData,
+    ConverterExtraData? extraDecodedData,
+    ConverterExtraData? extraEncodedData,
   }) {
-    return DataGroup(
+    return ConverterData(
       decoded: decoded ?? this.decoded,
       encoded: encoded ?? this.encoded,
       extraDecodedData: extraDecodedData ?? this.extraDecodedData,
@@ -34,13 +42,13 @@ class DataGroup {
   }
 }
 
-class ExtraItem {
-  const ExtraItem({
+class ConverterExtraItem {
+  const ConverterExtraItem({
     required this.key,
     required this.label,
   });
 
-  final Object? key;
+  final String key;
 
   final Widget label;
 }
@@ -49,6 +57,7 @@ class ConverterPage extends StatefulWidget {
   const ConverterPage({
     Key? key,
     this.hintText,
+    required this.restorationId,
     required this.decode,
     required this.encode,
     this.decodedLabel,
@@ -58,6 +67,8 @@ class ConverterPage extends StatefulWidget {
     this.extraDecodedItems = const [],
     this.extraEncodedItems = const [],
   }) : super(key: key);
+
+  final String restorationId;
 
   final String? hintText;
 
@@ -73,9 +84,17 @@ class ConverterPage extends StatefulWidget {
 
   final List<Widget> suffixActions;
 
-  final List<ExtraItem> extraDecodedItems;
+  final List<ConverterExtraItem> extraDecodedItems;
 
-  final List<ExtraItem> extraEncodedItems;
+  final List<ConverterExtraItem> extraEncodedItems;
+
+  static const _boxName = 'converter';
+
+  static Box<ConverterData>? _box;
+
+  static Future<void> openBox<ConverterData>() async {
+    _box ??= await Hive.openBox(_boxName);
+  }
 
   @override
   State<ConverterPage> createState() => ConverterPageState();
@@ -87,13 +106,17 @@ class ConverterPageState extends State<ConverterPage> {
     vertical: 16,
   );
 
-  final _decodedTextController = TextEditingController();
-  final _encodedTextController = TextEditingController();
-
-  final _extraDecodedControllers = <Object?, TextEditingController>{};
-  final _extraEncodedControllers = <Object?, TextEditingController>{};
-
   Object? _error;
+
+  late final ConverterData? _initData;
+
+  final _extraDecodedControllers = <String, TextEditingController>{};
+  final _extraEncodedControllers = <String, TextEditingController>{};
+
+  late final TextEditingController _decodedTextController;
+  late final TextEditingController _encodedTextController;
+
+  Box<ConverterData> get box => ConverterPage._box!;
 
   set error(Object? error) {
     setState(() {
@@ -117,32 +140,32 @@ class ConverterPageState extends State<ConverterPage> {
     _encodedTextController.text = decoded;
   }
 
-  ExtraData get extraDecodedData {
+  ConverterExtraData get extraDecodedData {
     return _extraDecodedControllers.map(
       (key, value) => MapEntry(key, value.text),
     );
   }
 
-  set extraDecodedData(ExtraData data) {
+  set extraDecodedData(ConverterExtraData data) {
     _extraDecodedControllers.forEach(
       (key, value) => value.text = data[key]!,
     );
   }
 
-  ExtraData get extraEncodedData {
+  ConverterExtraData get extraEncodedData {
     return _extraEncodedControllers.map(
       (key, value) => MapEntry(key, value.text),
     );
   }
 
-  set extraEncodedData(ExtraData data) {
+  set extraEncodedData(ConverterExtraData data) {
     _extraEncodedControllers.forEach(
       (key, value) => value.text = data[key]!,
     );
   }
 
-  DataGroup get data {
-    return DataGroup(
+  ConverterData get data {
+    return ConverterData(
       decoded: decoded,
       encoded: encoded,
       extraDecodedData: extraDecodedData,
@@ -150,11 +173,25 @@ class ConverterPageState extends State<ConverterPage> {
     );
   }
 
-  set data(DataGroup data) {
+  set data(ConverterData data) {
     decoded = data.decoded;
     encoded = data.encoded;
     extraDecodedData = data.extraDecodedData;
     extraEncodedData = data.extraEncodedData;
+
+    box.put(widget.restorationId, data);
+  }
+
+  @override
+  void initState() {
+    _initData = box.get(widget.restorationId);
+    _decodedTextController = TextEditingController(
+      text: _initData?.decoded,
+    );
+    _encodedTextController = TextEditingController(
+      text: _initData?.encoded,
+    );
+    super.initState();
   }
 
   @override
@@ -186,25 +223,27 @@ class ConverterPageState extends State<ConverterPage> {
 
   Widget _buildExtraDecodedTextFieldCard({
     required BuildContext context,
-    required ExtraItem item,
+    required ConverterExtraItem item,
   }) {
     return _buildTextFieldCard(
       context: context,
       label: item.label,
-      controller: _extraDecodedControllers[item.key] ??=
-          TextEditingController(),
+      controller: _extraDecodedControllers[item.key] ??= TextEditingController(
+        text: _initData?.extraDecodedData[item.key],
+      ),
     );
   }
 
   Widget _buildExtraEncodedTextFieldCard({
     required BuildContext context,
-    required ExtraItem item,
+    required ConverterExtraItem item,
   }) {
     return _buildTextFieldCard(
       context: context,
       label: item.label,
-      controller: _extraEncodedControllers[item.key] ??=
-          TextEditingController(),
+      controller: _extraEncodedControllers[item.key] ??= TextEditingController(
+        text: _initData?.extraEncodedData[item.key],
+      ),
     );
   }
 
@@ -260,8 +299,15 @@ class ConverterPageState extends State<ConverterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final box = ConverterPage._box;
     final hintText = widget.hintText;
     final theme = Theme.of(context);
+
+    if (box == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 16),
