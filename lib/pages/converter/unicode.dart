@@ -4,7 +4,13 @@ import 'package:useless_kit/pages/home/delegate.dart';
 
 class UnicodeConverterPage extends ConverterPage {
   const UnicodeConverterPage({Key? key})
-      : super(key: key, encode: _encode, decode: _decode);
+      : super(
+          key: key,
+          encode: _encode,
+          decode: _decode,
+          decodedLabel: const Text('Decoded'),
+          encodedLabel: const Text('Encoded'),
+        );
 
   static const HomeContentDelegate delegate = HomeContentChildDelegate(
     destination: NavigationRailDestination(
