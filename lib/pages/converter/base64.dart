@@ -10,15 +10,17 @@ class Base64ConverterPage extends ConverterPage {
           key: key,
           encode: _encode,
           decode: _decode,
-          decodedLabel: const Text('Decoded'),
+          decodedLabel: const Text('Plain Text'),
           encodedLabel: const Text('Encoded'),
+          hintText:
+              'Convert plain text into base64 format with encoding utf-8.',
           restorationId: 'base64',
         );
 
   static const HomeContentDelegate delegate = HomeContentChildDelegate(
     destination: NavigationRailDestination(
-      icon: Icon(Icons.transform),
-      selectedIcon: Icon(Icons.transform),
+      icon: Icon(Icons.swap_horiz_outlined),
+      selectedIcon: Icon(Icons.swap_horiz_outlined),
       label: Text('Base64'),
     ),
     child: Base64ConverterPage(),
