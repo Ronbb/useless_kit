@@ -8,8 +8,9 @@ class UnicodeConverterPage extends ConverterPage {
           key: key,
           encode: _encode,
           decode: _decode,
-          decodedLabel: const Text('Decoded'),
-          encodedLabel: const Text('Encoded'),
+          decodedLabel: const Text('Plain Text'),
+          encodedLabel: const Text('Hex'),
+          hintText: 'Convert plain text into utf-8 hex string.',
           restorationId: 'unicode',
         );
 
