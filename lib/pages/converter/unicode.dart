@@ -10,6 +10,7 @@ class UnicodeConverterPage extends ConverterPage {
           decode: _decode,
           decodedLabel: const Text('Decoded'),
           encodedLabel: const Text('Encoded'),
+          restorationId: 'unicode',
         );
 
   static const HomeContentDelegate delegate = HomeContentChildDelegate(
@@ -23,7 +24,7 @@ class UnicodeConverterPage extends ConverterPage {
 
   static final _regexp = RegExp(r'\\u([\da-f]+)');
 
-  static DataGroup _encode(DataGroup data) {
+  static ConverterData _encode(ConverterData data) {
     return data.copyWith(
       encoded: data.decoded.codeUnits
           .map(
@@ -33,7 +34,7 @@ class UnicodeConverterPage extends ConverterPage {
     );
   }
 
-  static DataGroup _decode(DataGroup data) {
+  static ConverterData _decode(ConverterData data) {
     return data.copyWith(
       decoded: String.fromCharCodes(
         _regexp

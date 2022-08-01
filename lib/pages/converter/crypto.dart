@@ -36,17 +36,18 @@ class _CryptoPageState extends State<CryptoPage> {
     return _algorithm;
   }
 
-  Future<DataGroup> _decode(DataGroup data) async {
+  Future<ConverterData> _decode(ConverterData data) async {
     return algorithm.decrypt(data);
   }
 
-  Future<DataGroup> _encode(DataGroup data) async {
+  Future<ConverterData> _encode(ConverterData data) async {
     return algorithm.encrypt(data);
   }
 
   @override
   Widget build(BuildContext context) {
     return ConverterPage(
+      restorationId: 'crypto',
       hintText: 'AES with PKCS7 padding.',
       extraDecodedItems: algorithm.extraDecodedItems,
       extraEncodedItems: algorithm.extraEncodedItems,
@@ -83,13 +84,13 @@ abstract class Algorithm {
 
   String get name;
 
-  List<ExtraItem> get extraDecodedItems => const [];
+  List<ConverterExtraItem> get extraDecodedItems => const [];
 
-  List<ExtraItem> get extraEncodedItems => const [];
+  List<ConverterExtraItem> get extraEncodedItems => const [];
 
-  Future<DataGroup> decrypt(DataGroup data);
+  Future<ConverterData> decrypt(ConverterData data);
 
-  Future<DataGroup> encrypt(DataGroup data);
+  Future<ConverterData> encrypt(ConverterData data);
 }
 
 abstract class AlgorithmCipher extends Algorithm {
@@ -102,15 +103,15 @@ abstract class AlgorithmCipher extends Algorithm {
   String get kKey => 'Key';
 
   @override
-  List<ExtraItem> get extraDecodedItems => [
-        ExtraItem(
+  List<ConverterExtraItem> get extraDecodedItems => [
+        ConverterExtraItem(
           key: kKey,
           label: const Text('Key'),
         ),
       ];
 
   @override
-  Future<DataGroup> decrypt(DataGroup data) async {
+  Future<ConverterData> decrypt(ConverterData data) async {
     final decodedCipherText = base64.decode(data.encoded);
     final key = data.extraDecodedData[kKey]!;
     final plainText = await algorithm.decrypt(
@@ -129,7 +130,7 @@ abstract class AlgorithmCipher extends Algorithm {
   }
 
   @override
-  Future<DataGroup> encrypt(DataGroup data) async {
+  Future<ConverterData> encrypt(ConverterData data) async {
     final key = data.extraDecodedData[kKey]!;
     final secretBox = await algorithm.encrypt(
       utf8.encode(data.decoded),
