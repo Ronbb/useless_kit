@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:useless_kit/pages/converter/base64.dart';
 import 'package:useless_kit/pages/converter/crypto.dart';
+import 'package:useless_kit/pages/converter/hash.dart';
 import 'package:useless_kit/pages/converter/unicode.dart';
 import 'package:useless_kit/pages/home/delegate.dart';
 
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
     Base64ConverterPage.delegate,
     UnicodeConverterPage.delegate,
     CryptoPage.delegate,
+    HashPage.delegate,
   ];
 
   @override

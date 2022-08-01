@@ -58,8 +58,8 @@ class ConverterPage extends StatefulWidget {
     Key? key,
     this.hintText,
     required this.restorationId,
-    required this.decode,
-    required this.encode,
+    this.decode,
+    this.encode,
     this.decodedLabel,
     this.encodedLabel,
     this.prefixActions = const [],
@@ -72,9 +72,9 @@ class ConverterPage extends StatefulWidget {
 
   final String? hintText;
 
-  final Converter decode;
+  final Converter? decode;
 
-  final Converter encode;
+  final Converter? encode;
 
   final Widget? decodedLabel;
 
@@ -280,8 +280,12 @@ class ConverterPageState extends State<ConverterPage> {
   }
 
   Future<void> _encode() async {
+    final encode = widget.encode;
+    if (encode == null) {
+      return;
+    }
     try {
-      data = await widget.encode(data);
+      data = await encode(data);
       error = null;
     } catch (e) {
       error = e;
@@ -289,8 +293,12 @@ class ConverterPageState extends State<ConverterPage> {
   }
 
   Future<void> _decode() async {
+    final decode = widget.decode;
+    if (decode == null) {
+      return;
+    }
     try {
-      data = await widget.decode(data);
+      data = await decode(data);
       error = null;
     } catch (e) {
       error = e;
@@ -300,6 +308,8 @@ class ConverterPageState extends State<ConverterPage> {
   @override
   Widget build(BuildContext context) {
     final box = ConverterPage._box;
+    final encode = widget.encode;
+    final decode = widget.decode;
     final hintText = widget.hintText;
     final theme = Theme.of(context);
 
@@ -336,16 +346,18 @@ class ConverterPageState extends State<ConverterPage> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             ...widget.prefixActions,
-            _buildConvertButton(
-              context: context,
-              onPressed: _encode,
-              icon: Icons.keyboard_arrow_down_rounded,
-            ),
-            _buildConvertButton(
-              context: context,
-              onPressed: _decode,
-              icon: Icons.keyboard_arrow_up_rounded,
-            ),
+            if (encode != null)
+              _buildConvertButton(
+                context: context,
+                onPressed: _encode,
+                icon: Icons.keyboard_arrow_down_rounded,
+              ),
+            if (decode != null)
+              _buildConvertButton(
+                context: context,
+                onPressed: _decode,
+                icon: Icons.keyboard_arrow_up_rounded,
+              ),
             ...widget.suffixActions,
           ],
         ),
