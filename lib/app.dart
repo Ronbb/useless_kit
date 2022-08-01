@@ -11,23 +11,46 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = GetIt.instance<GoRouter>();
 
-    return MaterialApp.router(
-      title: 'Useless Kit',
-      theme: ThemeData(
-        colorSchemeSeed: Colors.blueGrey,
-        useMaterial3: true,
-        inputDecorationTheme: const InputDecorationTheme(
-          border: InputBorder.none,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          floatingLabelStyle: TextStyle(height: 0.5),
-        ),
-        cardTheme: const CardTheme(
-          margin: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
+    final lightTheme = ThemeData(
+      brightness: Brightness.light,
+      colorSchemeSeed: Colors.blueGrey,
+      useMaterial3: true,
+      inputDecorationTheme: const InputDecorationTheme(
+        border: InputBorder.none,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        floatingLabelStyle: TextStyle(height: 0.5),
+      ),
+      cardTheme: const CardTheme(
+        margin: EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
         ),
       ),
+      fontFamily: defaultFontFamily,
+    );
+
+    final darkTheme = ThemeData(
+      brightness: Brightness.dark,
+      colorSchemeSeed: Colors.lightBlue,
+      useMaterial3: true,
+      inputDecorationTheme: const InputDecorationTheme(
+        border: InputBorder.none,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        floatingLabelStyle: TextStyle(height: 0.5),
+      ),
+      cardTheme: const CardTheme(
+        margin: EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+      ),
+      fontFamily: defaultFontFamily,
+    );
+
+    return MaterialApp.router(
+      title: 'Useless Kit',
+      theme: lightTheme,
+      darkTheme: darkTheme,
       locale: defaultLocale,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

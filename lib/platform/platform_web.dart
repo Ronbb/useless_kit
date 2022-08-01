@@ -1,3 +1,5 @@
 import 'dart:ui';
 
-Locale defaultLocale = window.locale;
+final Locale defaultLocale = window.locale;
+
+const String defaultFontFamily = '';
