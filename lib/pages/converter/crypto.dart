@@ -203,7 +203,7 @@ abstract class AlgorithmCipher2 extends Algorithm {
 
   @override
   Future<ConverterData> decrypt(ConverterData data) async {
-    final key = data.extraDecodedData[kPublicKey]!;
+    final key = data.extraDecodedData[kPrivateKey]!;
     final privateKey = RSAKeyParser().parse(key) as RSAPrivateKey;
 
     algorithm.reset();
