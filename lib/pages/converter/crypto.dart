@@ -52,7 +52,7 @@ class _CryptoPageState extends State<CryptoPage> {
   Widget build(BuildContext context) {
     return ConverterPage(
       restorationId: 'crypto',
-      hintText: 'AES with PKCS7 padding.',
+      hintText: 'Crypto',
       extraDecodedItems: algorithm.extraDecodedItems,
       extraEncodedItems: algorithm.extraEncodedItems,
       decodedLabel: const Text('Plain Text'),
@@ -208,13 +208,8 @@ abstract class AlgorithmCipher2 extends Algorithm {
 
     algorithm.reset();
     algorithm.init(false, PrivateKeyParameter<RSAPrivateKey>(privateKey));
-    final decrypted = algorithm.process(
-      Uint8List.fromList(
-        utf8.encode(data.decoded),
-      ),
-    );
-
-    return data.copyWith(encoded: base64.encode(decrypted));
+    final decrypted = algorithm.process(base64.decode(data.encoded));
+    return data.copyWith(decoded: utf8.decode(decrypted));
   }
 }
 
