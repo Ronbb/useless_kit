@@ -75021,7 +75021,7 @@ return A.a_($async$ly,r)},
 kc(a){return this.a7j(a)},
 a7j(a){var s=0,r=A.a0(t.l8),q,p,o,n
 var $async$kc=A.a1(function(b,c){if(b===1)return A.Y(c,r)
-while(true)switch(s){case 0:n=a.c.h(0,"PublicKey")
+while(true)switch(s){case 0:n=a.c.h(0,"PrivateKey")
 n.toString
 p=t.x1.a(new A.Nf().Op(0,n))
 n=$.aqi()
